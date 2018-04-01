@@ -70,7 +70,7 @@ function initialiseHelp()
     helpContent = helpContent + "<p>Once you have selected the values of all the parameters, you can click on start/stop button which is initially set to start</p>";
     helpContent = helpContent + "<p>Click on start which will change the button to stop.</p>";
     helpContent = helpContent + "<p>Now the animation has started.</p>";
-    helpContent = helpContent + "<p>On the right side, you can see the velocity of the block and the time spent(in seconds).</p>";
+    helpContent = helpContent + "<p>On the right side, you can see the velocity of the block (velocityx100, which means the actual velocity is (the shown velocity)/100) and the time spent(in seconds).</p>";
     helpContent = helpContent + "<p>The block will start moving in the direction depending on the magnitude of the net force in the horizontal direction on the block.</p>";
     helpContent = helpContent + "<p>Once the block reaches the end of the surface, it will fall down.</p>";
     helpContent = helpContent + "<p>You can click the reset experiment button to start the experiment again.</p>";
@@ -104,7 +104,7 @@ function initialiseScene()
     PIEaddInputSlider("Force(+X)", force_pos, Force_pos, -1, 1, 0.1);
     PIEaddInputSlider("Force(-X)", force_neg, Force_neg, -1, 1, 0.1);
     PIEaddInputSlider("Mass", 1, mass, 1, 20, 0.1);
-    PIEaddDisplayText("Velocity", 0);
+    PIEaddDisplayText("Velocity*100(m/s)", 0);
     PIEaddDisplayText("Time(s)", 0);
 }
 
@@ -277,7 +277,7 @@ function updateExperimentElements(t, dt)
             group1.position.x = initialPosition + (1/2)*net_acc_in_pos*c*c + Velocity*c;
         Velocity = net_acc_in_pos*c;
         // console.log(Velocity);
-        PIEchangeDisplayText("Velocity", Velocity);
+        PIEchangeDisplayText("Velocity*100(m/s)", (Velocity*100));
     }
     else if(Math.abs(group1.position.y) <= 20)
     {
