@@ -14,9 +14,11 @@ var force_pos;
 var force_neg;
 var count = 0;
 var handle;
+var reseted;
 var collided;
 var massOfHammer;
 var hammer;
+var storedAngle1;
 var raycaster;
 var value;
 var storedAngle;
@@ -70,6 +72,7 @@ function initialiseVariables()
     raycaster = new THREE.Raycaster();
     Velocity = 0;
     initialPosition = 0;
+    reseted = 0;
     clockTime = 0;
     count = 0;
     massOfHammer = 5;
@@ -489,6 +492,7 @@ function handleDrag(element, newpos)
                 }
             }
             handle.rotation.z = (handle.rotation.z)%(2*Math.PI);
+            storedAngle1 = handle.rotation.z;
         }
     }
 }
@@ -496,17 +500,16 @@ function handleDrag(element, newpos)
 /*----------------------  Function to handle block drag.  ------------------*/
 function blockDrag(element, newpos)
 {
-    if(Math.abs(newpos.x) < 9.67)
+    if(Math.abs(newpos.x) < 9.67 && !checkCollisionBlock(newpos))
     {
         initialPosition = newpos.x;
         block.position.x = newpos.x;
     }
 }
 
-/*----------------------  Function to check collision between hammer and block.  ------------------*/
+/*----------------------  Functions to check collision between hammer and block.  ------------------*/
 function checkCollision(newpos, side)
 {
-    typeof newpos
     var firstObject = new THREE.Box3().setFromObject(block);
     var x1 = handle.position.x;
     var x2 = handle.position.y;
@@ -525,6 +528,25 @@ function checkCollision(newpos, side)
     handle.position.x = x1;
     handle.position.y = x2;
     handle.position.z = x3;
+    return collision;
+}
+
+function checkCollisionBlock(newpos)
+{
+    var firstObject = new THREE.Box3().setFromObject(handle);
+    var x1 = block.position.x;
+    var x2 = block.position.y;
+    var x3 = block.position.z;
+    block.position.x = newpos.x;
+    block.position.y = newpos.y;
+    block.position.z = newpos.z;
+    var secondObject = new THREE.Box3().setFromObject(block);
+
+    var collision = firstObject.intersectsBox(secondObject);
+
+    block.position.x = x1;
+    block.position.y = x2;
+    block.position.z = x3;
     return collision;
 }
 
@@ -555,11 +577,28 @@ function calculate()
 /*----------------------  Helper function which starts clock and animation and also calls calculate()  ------------------*/
 function startExperiment()
 {
+    ++reseted;
     ++started;
     startClock(0);
     ++temp;
 
-    storedAngle = handle.rotation.z;
+    if(reseted == 1)
+    {
+        if(Math.abs(handle.rotation.z) > Math.PI)
+        {
+            if(handle.rotation.z > 0)
+            {
+                handle.rotation.z = -1*(2*Math.PI - handle.rotation.z);
+            }
+            else
+            {
+                handle.rotation.z = 2*Math.PI + handle.rotation.z;
+            }
+        }
+        storedAngle = handle.rotation.z;
+        if(storedAngle == 0)
+            storedAngle = storedAngle1;
+    }
 
     PIEstartAnimation();
 }
@@ -651,6 +690,7 @@ function resetExperiment()
     initialPosition = 0;
     hingeFixed = 0;
     time_elapsed = 0;
+    reseted = 0;
     started = 0;
     verticalVelocity = 0;
     learn_started = 0;
