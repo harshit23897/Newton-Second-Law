@@ -346,7 +346,7 @@ function addSurface()
 
     var tablelegGeom = new THREE.CubeGeometry( 0.5, 40, 0.5, 4, 4, 1 );
     var tableleg =  new THREE.Mesh( tablelegGeom,new THREE.MeshBasicMaterial({color: 0x3A281E}));
-    tableleg.position.set(-10.5,-20,10.5);
+    tableleg.position.set(-10,-20,10);
     
     var edges2 = new THREE.EdgesGeometry( tablelegGeom );
     var line2 = new THREE.LineSegments( edges2, new THREE.LineBasicMaterial( { color: 0x000 } ) );
@@ -356,7 +356,7 @@ function addSurface()
 
     var tablelegGeom2 = new THREE.CubeGeometry( 0.5, 40, 0.5, 4, 4, 1 );
     var tableleg2 =  new THREE.Mesh( tablelegGeom2,new THREE.MeshBasicMaterial({color: 0x3A281E}));
-    tableleg2.position.set(10.5,-20,10.5);
+    tableleg2.position.set(10,-20,10);
     
     var edges3 = new THREE.EdgesGeometry( tablelegGeom2 );
     var line3 = new THREE.LineSegments( edges3, new THREE.LineBasicMaterial( { color: 0x000 } ) );
@@ -367,7 +367,7 @@ function addSurface()
 
     var tablelegGeom3 = new THREE.CubeGeometry( 0.5, 39, 0.5, 4, 4, 1 );
     var tableleg3 =  new THREE.Mesh( tablelegGeom3,new THREE.MeshBasicMaterial({color: 0x3A281E}));
-    tableleg3.position.set(-9.1,-20,-9.1);
+    tableleg3.position.set(-9,-20,-7);
     
     var edges4 = new THREE.EdgesGeometry( tablelegGeom3 );
     var line4 = new THREE.LineSegments( edges4, new THREE.LineBasicMaterial( { color: 0x000 } ) );
@@ -378,7 +378,7 @@ function addSurface()
 
     var tablelegGeom4 = new THREE.CubeGeometry( 0.5, 39, 0.5, 4, 4, 1 );
     var tableleg4 =  new THREE.Mesh( tablelegGeom4,new THREE.MeshBasicMaterial({color: 0x3A281E}));
-    tableleg4.position.set(9.1,-20,-9.1);
+    tableleg4.position.set(9,-20,-7);
     
     var edges5 = new THREE.EdgesGeometry( tablelegGeom4 );
     var line5 = new THREE.LineSegments( edges5, new THREE.LineBasicMaterial( { color: 0x000 } ) );
@@ -434,7 +434,7 @@ function addHammer()
     handle.add(handle_lines);
     handle.add( hammer_lines );
     handle.add(hammer);
-    handle.position.set(0, 5, 0);
+    handle.position.set(0, 6, 2);
     
     handle.rotation.y = 0;
     handle.rotation.z = 0;
@@ -649,11 +649,25 @@ function loadExperimentElements()
     initialiseOtherVariables();
     initialiseScene();
 
+    PIEscene.background = new THREE.Color( 0x00BFFF );
+    //PIEscene.background = new THREE.Color( 0xFCEDB2 );
+    var ambient = new THREE.AmbientLight( 0x555555 );
+    PIEaddElement(ambient);
+
+    var light = new THREE.DirectionalLight( 0x123456 );
+    light.position = PIEcamera.position;
+    PIEaddElement(light);
+
+    var ambient = new THREE.AmbientLight( 0x555555 );
+    PIEaddElement(ambient);
+
+    var light = new THREE.DirectionalLight( 0x123456 );
+    light.position = PIEcamera.position;
+    PIEaddElement(light);
+
     addSurface();
     addBlock();
     addHammer();
-
-    PIEdragElement(mainCuboid);
 
     initialiseHelp();
     initialiseInfo();
@@ -666,7 +680,10 @@ function loadExperimentElements()
     document.getElementById("help").addEventListener('click', hideItems);
     document.body.addEventListener('click', showItems, true); 
 
-    PIEsetAreaOfInterest(15, -15, -15, 15);
+    PIEsetAreaOfInterest(30, -30, -30, 30);
+    PIEadjustDisplayScene();
+    PIEadjustCamera(0, 10, -50);
+    PIEturnCamera(0,-7,50);
 }
 
 function resetExperiment()
